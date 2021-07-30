@@ -21,9 +21,9 @@ Route::get('/', function () {
 
 /* Auth::routes(); */
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); 
-Route::get('/productos', [ProductosController::class, 'index']) -> name('productos.index');
-Route::get('/productos/create', [ProductosController::class, 'create']) -> name('productos.create');
-Route::get('/productos/detalle', [ProductosController::class, 'detalle']) -> name('productos.detalle');
-Route::post('/productos', [ProductosController::class, 'store']) -> name('productos.store');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
+Route::get('/productos/create', [ProductosController::class, 'create'])->name('productos.create');
+Route::get('/productos/detalle', [ProductosController::class, 'detalle'])->name('productos.detalle');
+Route::post('/productos', [ProductosController::class, 'store'])->name('productos.store');
 Auth::routes();

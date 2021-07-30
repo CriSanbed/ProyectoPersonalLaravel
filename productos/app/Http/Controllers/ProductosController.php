@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductosController extends Controller
@@ -14,7 +15,7 @@ class ProductosController extends Controller
         //verificar si hay una instancia para generar una nueva
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +23,8 @@ class ProductosController extends Controller
      */
     public function index()
     {
-        return view('productos.index');
+//        $userProductos = Auth::user()->userProductos;
+        return view('productos.index')/*->with('userProductos', $userProductos)*/;
     }
 
     /**
@@ -34,7 +36,7 @@ class ProductosController extends Controller
     {
         return view('productos.create');
     }
-    
+
     public function detalle()
     {
         return view('productos.detalle');
@@ -43,35 +45,36 @@ class ProductosController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //USO DEL FASAT
-         $data = $request->validate([
-            'nombre'=> 'required|min:6',
-            'categoria'=> 'required|min:6',
-            'paraQuien'=> 'required|min:6'
-            
+
+        $data = $request->validate([
+            'nombre' => 'required|min:6',
+            'categoria' => 'required|min:6',
+            'paraQuien' => 'required|min:6'
+
         ]);
-        DB::table('productos')-> insert([
+        DB::table('productos')->insert([
             'nombre' => $data['nombre'],
             'categoria' => $data['categoria'],
             'paraQuien' => $data['paraQuien']
-            
-        ]); 
-        // nos da una simulacion, permitiendo capturar la info q se esta enviando
+
+        ]);
+        // NOS DA UNA SIMULACION, PERMITIENDO CAPTURAR LA INFO Q SE ESTA ENVIANDO
         // dd($request->all());
 
         //REDIRECCIONAMIENTO
-        return redirect() -> action([ProductosController::class, 'index']);
+        return redirect()->action([ProductosController::class, 'index']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -82,7 +85,7 @@ class ProductosController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -93,8 +96,8 @@ class ProductosController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -105,7 +108,7 @@ class ProductosController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -113,3 +116,4 @@ class ProductosController extends Controller
         //
     }
 }
+

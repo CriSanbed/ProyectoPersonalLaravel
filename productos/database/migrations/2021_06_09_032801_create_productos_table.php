@@ -13,10 +13,19 @@ class CreateProductosTable extends Migration
      */
     public function up()
     {
+        //SCHEMA PARA CATEGORIAS
+        Schema::create('categorias', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->timestamps();
+        });
+
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->text('categoria');
+            $table->foreignId('categorias_id')->references('id')->on('categorias')->comment('Categoria del producto');
+            $table->foreignId('user_id')->references('id')->on('users')->comment('El usuario que crea el producto');
+//            $table->text('categoria');
             $table->text('paraQuien');
             $table->string('imagen')->nullable();
             $table->timestamps();
@@ -31,5 +40,6 @@ class CreateProductosTable extends Migration
     public function down()
     {
         Schema::dropIfExists('productos');
+        Schema::dropIfExists('categorias');
     }
 }
