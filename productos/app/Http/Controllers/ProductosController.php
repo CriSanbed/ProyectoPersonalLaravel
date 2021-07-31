@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 //use GuzzleHttp\Middleware;
+use App\Models\Producto;
+use App\Models\Productos;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,7 @@ class ProductosController extends Controller
     public function __construct()
     {
         //verificar si hay una instancia para generar una nueva
-        $this->middleware('auth');
+        $this->middleware('auth', ['except'=>'show']);
     }
 
     /**
@@ -78,7 +80,7 @@ class ProductosController extends Controller
         $img->save();
 
         //INSERTANDO REGISTROS SIN MODELO
-        DB::table('productos')->insert([
+        /*DB::table('productos')->insert([
             'nombre' => $data['nombre'],
             'categorias_id' => $data['categoria'],
             'user_id' => Auth::user()->id,
@@ -86,7 +88,17 @@ class ProductosController extends Controller
             'descripcion' => $data['descripcion'],
             'imagen' => $ruta_imagen,
 
+        ]);*/
+
+        //INSERTANDO REGISTROS CON MODELO A PARTIR DEL USUARIO AUTENTIFICADO
+        Auth::user()->userProductos()->create([
+            'nombre' => $data['nombre'],
+            'categorias_id' => $data['categoria'],
+            'paraQuien' => $data['paraQuien'],
+            'descripcion' => $data['descripcion'],
+            'imagen' => $ruta_imagen,
         ]);
+
         // NOS DA UNA SIMULACION, PERMITIENDO CAPTURAR LA INFO Q SE ESTA ENVIANDO
         // dd($request->all());
 
@@ -100,9 +112,9 @@ class ProductosController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Productos $producto)
     {
-        //
+        return view('productos.show')->with('producto', $producto);
     }
 
     /**
@@ -111,9 +123,11 @@ class ProductosController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Productos $producto)
     {
-        //
+        $categorias = Categoria::all(['id', 'nombre']);
+        return view('productos.edit')->with('categorias', $categorias)
+            ->with('producto', $producto);
     }
 
     /**
@@ -123,9 +137,37 @@ class ProductosController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Productos $producto)
     {
-        //
+        $data = $request->validate([
+            'nombre' => 'required|min:6',
+            'categorias' => 'required',
+            'paraQuien' => 'required',
+            'descripcion' => 'required',
+
+        ]);
+
+//       ASIGNAR VALORES
+//       DATA RECIBE NOMBRE QUE ES EL NOMBRE QUE PUSE EN LOS ID DEL EDIT RECETA
+        $producto->nombre = $data['nombre'];
+        $producto->categorias_id = $data['categorias'];
+        $producto->paraQuien = $data['paraQuien'];
+        $producto->descripcion = $data['descripcion'];
+//        NUEVA IMAGEN
+        if (request('imagen')) {
+//            guardar la imagen en nuestro store
+            $ruta_imagen = $request['imagen']->store('upload-productos', 'public');
+//            despues aplicanos estilo
+            $img = Image::make(public_path("storage/{$ruta_imagen}"))->fit(500, 250);
+            $img->save();
+            $producto->imagen = $ruta_imagen;
+        }
+
+//        GUARDAR INFO
+        $producto->save();
+
+        //REDIRECCIONAR
+        return redirect()->action([ProductosController::class, 'index']);
     }
 
     /**

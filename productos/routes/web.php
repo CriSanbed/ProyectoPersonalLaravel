@@ -24,6 +24,8 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/productos', [ProductosController::class, 'index'])->name('productos.index');
 Route::get('/productos/create', [ProductosController::class, 'create'])->name('productos.create');
-Route::get('/productos/detalle', [ProductosController::class, 'detalle'])->name('productos.detalle');
 Route::post('/productos', [ProductosController::class, 'store'])->name('productos.store');
+Route::get('/productos/{producto}', [ProductosController::class, 'show'])->name('productos.show');
+Route::get('/productos/{producto}/edit', [ProductosController::class, 'edit']) -> name('productos.edit');
+Route::put('/productos/{producto}', [ProductosController::class, 'update']) -> name('productos.update');
 Auth::routes();

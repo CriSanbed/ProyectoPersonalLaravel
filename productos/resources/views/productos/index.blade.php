@@ -28,12 +28,12 @@
             @foreach($userProductos as $userProducto)
                 <tr>
                     <td>{{$userProducto->nombre}}</td>
-                    <td>{{$userProducto->categorias_id}}</td>
+                    <td>{{$userProducto->categoriaProducto->nombre}}</td>
                     <td>{{$userProducto->paraQuien}}</td>
                     <td>
-                        <a class="btn btn-primary" href="{{route('productos.detalle')}}"><i class="fas fa-eye"></i></a>
-                        <a class="btn btn-success" href="{{route('productos.detalle')}}"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-danger" href="{{route('productos.detalle')}}"><i class="far fa-trash-alt"></i></a>
+                        <a class="btn btn-primary" href="{{route('productos.show', ['producto'=>$userProducto->id])}}"><i class="fas fa-eye"></i></a>
+                        <a class="btn btn-success" href="{{route('productos.edit', ['producto'=>$userProducto->id])}}"><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-danger" ><i class="far fa-trash-alt"></i></a>
                     </td>
 
                 </tr>
