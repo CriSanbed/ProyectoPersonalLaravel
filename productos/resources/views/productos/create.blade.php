@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.css"
           integrity="sha512-CWdvnJD7uGtuypLLe5rLU3eUAkbzBR3Bm1SFPEaRfvXXI2v2H5Y0057EMTzNuGGRIznt8+128QIDQ8RqmHbAdg=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 @endsection
 
 @section('botones')
@@ -17,22 +18,10 @@
     {{--    {{$categorias}} PARA SABER QUE SI ESTA PASANDO CATEGORIAS AL DAR CLIC EN CREAR--}}
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
-{{--            enctype -> me permite la subida de archivos a la aplicacion--}}
+            {{--            enctype -> me permite la subida de archivos a la aplicacion--}}
             <form method="POST" action={{route('productos.store')}} enctype="multipart/form-data" novalidate>
                 {{-- TOKEN CREADO --}}
                 @csrf
-
-                {{-- ID PRODUCTO --}}
-                {{-- <div class="form-group">
-                        <label for="id">ID del Producto</label>
-                        <input type="number" name="id" class="form-control @error('id') is-invalid @enderror" id="id" placeholder="Ingresa el ID del producto" value="{{old('id')}}">
-                @error('id')
-                {{-- <p>Hubo un error de longitud de  caracteres</p> EJEMPLO--}}
-                {{-- <span class='invalid-feedback d-block' role='alert'>
-                                <strong>{{$message}}</strong>
-                </span>
-                @enderror
-        </div> --}}
 
                 {{-- NOMBRE DEL PRODUCTO --}}
                 <div class="form-group">
@@ -54,13 +43,17 @@
                     <select name="categoria" class="form-control @error('categoria') is-invalid @enderror"
                             id="categoria">
                         <option value="" disabled selected>--Seleccione--</option>
-                        {{--@foreach($categorias as $categoria)
+
+                        {{--                        PARA TOMAR DATOS CON MODELO--}}
+                        @foreach($categorias as $categoria)
                             <option
                                 value={{$categoria -> id}} {{old('categorias')==$categoria->id ? 'selected' : ''}}>{{$categoria->nombre}}</option>
-                        @endforeach--}}
-                        @foreach($categorias as $id => $categoria)
-                            <option value={{$id}} {{old('categoria')==$id ? 'selected' : ''}}>{{$categoria}}</option>
                         @endforeach
+
+                        {{--                        PARA TOMAR DATOS SIN MODELO--}}
+                        {{--@foreach($categorias as $id => $categoria)
+                            <option value={{$id}} {{old('categoria')==$id ? 'selected' : ''}}>{{$categoria}}</option>
+                        @endforeach--}}
                     </select>
 
                     @error('categoria')
@@ -77,9 +70,9 @@
                     <select name="paraQuien" class="form-control @error('paraQuien') is-invalid @enderror"
                             id="paraQuien">
                         <option value="" disabled selected>--Seleccione--</option>
-                        <option value="paraEl">Para él</option>
-                        <option value="paraElla">Para ella</option>
-                        <option value="unisex">Unisex</option>
+                        <option value="Para él">Para él</option>
+                        <option value="Para ella">Para ella</option>
+                        <option value="Unisex">Unisex</option>
 
                     </select>
 
@@ -106,7 +99,7 @@
 
                 {{-- IMAGEN --}}
                 <div class="form-group mt-3">
-                    <label for="imagen">Imagen Producto</label><br>
+                    <label for="imagen">Imagen Producto  <i class="fas fa-images"></i></label><br>
                     <input id="imagen" type="file" class="btn btn-secondary" name="imagen">
                 </div>
 
@@ -129,5 +122,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.js"
         integrity="sha512-/1nVu72YEESEbcmhE/EvjH/RxTg62EKvYWLG3NdeZibTCuEtW5M4z3aypcvsoZw03FAopi94y04GhuqRU9p+CQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script defer src="https://use.fontawesome.com/releases/v5.5.0/js/all.js"
+        integrity="sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0"
+        crossorigin="anonymous"></script>
 @endsection
 

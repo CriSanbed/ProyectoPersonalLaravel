@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Faker\Provider\Image;
-use GuzzleHttp\Middleware;
+//use GuzzleHttp\Middleware;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-//use Intervention\Image\Facades\Image;
+use Intervention\Image\Facades\Image;
 
 class ProductosController extends Controller
 {
@@ -21,23 +21,29 @@ class ProductosController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
-//        $userProductos = Auth::user()->userProductos;
-        return view('productos.index')/*->with('userProductos', $userProductos)*/;
+        $userProductos = Auth::user()->userProductos;
+        return view('productos.index')->with('userProductos', $userProductos);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function create()
     {
-        $categorias = DB::table('categorias')->get()->pluck('nombre', 'id');
+        //OBTENER SIN MODELO
+        /*$categorias = DB::table('categorias')->get()->pluck('nombre', 'id');
+        return view('productos.create')->with('categorias', $categorias);*/
+
+        //OBTENER CON MODELO
+        $categorias = Categoria::all(['id','nombre']);
         return view('productos.create')->with('categorias', $categorias);
+
 
     }
 
@@ -68,8 +74,8 @@ class ProductosController extends Controller
         //ruta imagen
         $ruta_imagen = $request['imagen']->store('upload-productos', 'public');
         //redimensionando la imagen
-       // $img = Image::make(public_path("storage/{$ruta_imagen}"))->fit(1000, 550);
-        //$img->save();
+        $img = Image::make(public_path("storage/$ruta_imagen"))->fit(500, 250);
+        $img->save();
 
         //INSERTANDO REGISTROS SIN MODELO
         DB::table('productos')->insert([

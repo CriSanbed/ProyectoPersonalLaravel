@@ -114,6 +114,7 @@
       <excludeFolder url="file://$MODULE_DIR$/productos/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/productos/vendor/psr/http-client" />
       <excludeFolder url="file://$MODULE_DIR$/productos/vendor/hamcrest/hamcrest-php" />
+      <excludeFolder url="file://$MODULE_DIR$/productos/vendor/intervention/image" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
