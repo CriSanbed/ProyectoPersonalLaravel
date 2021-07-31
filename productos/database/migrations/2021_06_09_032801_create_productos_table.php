@@ -25,8 +25,8 @@ class CreateProductosTable extends Migration
             $table->string('nombre');
             $table->foreignId('categorias_id')->references('id')->on('categorias')->comment('Categoria del producto');
             $table->foreignId('user_id')->references('id')->on('users')->comment('El usuario que crea el producto');
-//            $table->text('categoria');
             $table->text('paraQuien');
+            $table->text('descripcion');
             $table->string('imagen')->nullable();
             $table->timestamps();
         });

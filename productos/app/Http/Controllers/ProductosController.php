@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Faker\Provider\Image;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+//use Intervention\Image\Facades\Image;
 
 class ProductosController extends Controller
 {
@@ -34,7 +36,9 @@ class ProductosController extends Controller
      */
     public function create()
     {
-        return view('productos.create');
+        $categorias = DB::table('categorias')->get()->pluck('nombre', 'id');
+        return view('productos.create')->with('categorias', $categorias);
+
     }
 
     public function detalle()
@@ -50,18 +54,31 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
-        //USO DEL FASAT
 
+        //USO DEL FACADE
         $data = $request->validate([
             'nombre' => 'required|min:6',
-            'categoria' => 'required|min:6',
-            'paraQuien' => 'required|min:6'
+            'categoria' => 'required',
+            'paraQuien' => 'required',
+            'descripcion' => 'required',
+            'imagen' => 'required|image'
 
         ]);
+
+        //ruta imagen
+        $ruta_imagen = $request['imagen']->store('upload-productos', 'public');
+        //redimensionando la imagen
+       // $img = Image::make(public_path("storage/{$ruta_imagen}"))->fit(1000, 550);
+        //$img->save();
+
+        //INSERTANDO REGISTROS SIN MODELO
         DB::table('productos')->insert([
             'nombre' => $data['nombre'],
-            'categoria' => $data['categoria'],
-            'paraQuien' => $data['paraQuien']
+            'categorias_id' => $data['categoria'],
+            'user_id' => Auth::user()->id,
+            'paraQuien' => $data['paraQuien'],
+            'descripcion' => $data['descripcion'],
+            'imagen' => $ruta_imagen,
 
         ]);
         // NOS DA UNA SIMULACION, PERMITIENDO CAPTURAR LA INFO Q SE ESTA ENVIANDO
