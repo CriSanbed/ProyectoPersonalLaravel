@@ -19,5 +19,9 @@
         <div class="card-footer text-muted" style="background-color:#FFDAB9">
             Creado por: <strong>{{$producto->autorProducto->name}}</strong>, el: {{date('d-m-Y', strtotime($producto->created_at))}}
         </div>
+        <div class="justify-content-center row text-center">
+{{--            <like-button producto-id="{{$producto->id}}" like="{{$like}}" likes="{{$likes}}"></like-button>--}}
+
+        </div>
     </div>
 @endsection

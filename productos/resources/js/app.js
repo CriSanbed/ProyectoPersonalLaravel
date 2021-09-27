@@ -3,8 +3,12 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+import VueSweetalert2 from "vue-sweetalert2";
+import 'sweetalert2/dist/sweetalert2.min.css'
+require('./bootstrap');
 
 require('./bootstrap');
+require('alpinejs');
 
 window.Vue = require('vue').default;
 
@@ -18,10 +22,21 @@ window.Vue = require('vue').default;
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+
+Vue.use(VueSweetalert2);
 //QUE ME PERMITA INCORPORAR EL TRIX EDITOR
 Vue.config.ignoredElements = ["trix-editor", "trix-toolbar"];
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+Vue.component(
+    "eliminar-producto",
+    require("./components/EliminarProducto.vue").default
+);
+
+Vue.component(
+    "like-button",
+    require("./components/likeButton.vue").default
+);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -31,3 +46,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+//jQuery like button
+$('.like-btn').on('click', function() {
+    $(this).toggleClass('like-active');
+});
+

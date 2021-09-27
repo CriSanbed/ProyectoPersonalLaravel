@@ -16,6 +16,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
+
     <!-- Styles -->
     {{--    CREANDO UN YIELD PARA MIS ESTILOS, buena practica--}}
     @yield('styles')
@@ -64,6 +65,13 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{route('perfiles.show', ['perfil'=>Auth::user()->id])}}">
+                                    {{ 'Ver Perfil' }}
+                                </a>
+                                <a class="dropdown-item" href="{{route('productos.index')}}">
+                                    {{ 'Ver Productos' }}
+                                </a>
+
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -74,6 +82,7 @@
                                     @csrf
                                 </form>
                             </div>
+
                         </li>
                     @endguest
                 </ul>

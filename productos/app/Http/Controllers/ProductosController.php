@@ -27,8 +27,13 @@ class ProductosController extends Controller
      */
     public function index()
     {
-        $userProductos = Auth::user()->userProductos;
-        return view('productos.index')->with('userProductos', $userProductos);
+        $usuario = Auth::user()->id;
+        $userProductos = Productos::where('user_id', $usuario)->paginate(10);
+
+        //Recetas que le gusta al usuario
+        $iLikes = Auth::user()->iLike;
+        return view('productos.index')->with('userProductos', $userProductos)
+           ->with('iLikes', $iLikes);
     }
 
     /**
@@ -49,10 +54,10 @@ class ProductosController extends Controller
 
     }
 
-    public function detalle()
-    {
-        return view('productos.detalle');
-    }
+//    public function detalle()
+//    {
+//        return view('productos.detalle');
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -114,7 +119,15 @@ class ProductosController extends Controller
      */
     public function show(Productos $producto)
     {
+//        El metodo iLike me devuelve un arreglo con todos los me gusta, si el usuario autentificado dio like
+        //$like = (Auth::user()) ? Auth::user()->iLike->contains($producto->id) : false;
+
+        //Cantidad de likes que tiene el producto actual por usuario
+       // $likes = $producto->likes()->count();
+
         return view('productos.show')->with('producto', $producto);
+//           ->with('like', $like)
+        //    ->with('likes', $likes);
     }
 
     /**
@@ -125,6 +138,9 @@ class ProductosController extends Controller
      */
     public function edit(Productos $producto)
     {
+        //verificacion del POLICY
+        //$this->authorize('view', $producto);
+
         $categorias = Categoria::all(['id', 'nombre']);
         return view('productos.edit')->with('categorias', $categorias)
             ->with('producto', $producto);
@@ -139,6 +155,8 @@ class ProductosController extends Controller
      */
     public function update(Request $request, Productos $producto)
     {
+        //        VERIFICACION DEL POLICY
+        $this->authorize('update', $producto);
         $data = $request->validate([
             'nombre' => 'required|min:6',
             'categorias' => 'required',
@@ -148,7 +166,7 @@ class ProductosController extends Controller
         ]);
 
 //       ASIGNAR VALORES
-//       DATA RECIBE NOMBRE QUE ES EL NOMBRE QUE PUSE EN LOS ID DEL EDIT RECETA
+//       DATA RECIBE NOMBRE QUE ES EL NOMBRE QUE PUSE EN LOS ID DEL EDIT PRODUCTO
         $producto->nombre = $data['nombre'];
         $producto->categorias_id = $data['categorias'];
         $producto->paraQuien = $data['paraQuien'];
@@ -176,9 +194,14 @@ class ProductosController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Productos $producto)
     {
-        //
+//        VERIFICACION DEL POLICY
+        $this->authorize('delete', $producto);
+        //return "eliminar";
+//        AGREGAR METODO PARA ELIMINAR
+        $producto->delete();
+        return redirect()->action([ProductosController::class, 'index']);
     }
 }
 
